@@ -1,11 +1,11 @@
-import AdminDashboard from "./Admin/page"
+import Auth from "./Auth/page";
 
 function App() {
   return (
     <>
-    <AdminDashboard />
+      <Auth />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useUserLoginStore } from "../hooks/store";
 import { message } from "antd";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Auth() {
   type FormState = {
@@ -21,6 +22,8 @@ export default function Auth() {
   const updateUserStateStore = useUserLoginStore(
     (state) => state.updateUserState
   );
+  const service = process.env.LOCAL_HOST ;;
+  const navigate = useNavigate();
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
   const [messageApi, contextHolder] = message.useMessage();
   const [formState, setFormState] = useState<FormState>({
@@ -69,7 +72,7 @@ export default function Auth() {
   ];
   function Register() {
     axios
-      .post("http://localhost:3000/auth/api/register", {
+      .post(`${service}/auth/api/register`, {
         email: formState.email,
         passwordHash: formState.password,
         userName: `${formState.firstname} ${formState.lastName}`,
@@ -99,9 +102,9 @@ export default function Auth() {
   function SignIn() {
     axios
       .get(
-        `http://localhost:3000/auth/api/user?email=${formState.email}&passwordHash=${formState.password}`
+        `${service}/auth/api/user?email=${formState.email}&passwordHash=${formState.password}`
       )
-      .then(() => {
+      .then((res) => {
         messageApi.open({
           type: "success",
           content: "Sign in successful!",
@@ -113,6 +116,7 @@ export default function Auth() {
           isRegistered: true,
           isSignedIn: true,
         });
+        res.data.role !== "ADMIN" ? navigate("/ebook") : navigate("/admin");
       })
       .catch((error) => {
         // console.log(error.response.data.message);
@@ -263,7 +267,7 @@ export default function Auth() {
               className="font-medium text-black hover:underline"
               onClick={() => setIsSignIn(!isSignIn)}
             >
-              {isSignIn ? "Sign Up" : "Sign In"}
+              {isSignIn ? "Register" : "Sign In"}
             </button>
           </p>
         </div>

@@ -2,15 +2,6 @@ import React, { useMemo, useState } from "react";
 import { ProfileCard } from "./widget/profileCard";
 import { BookCard } from "./widget/bookCard";
 
-// NOTE: This component is purely UI (no API calls). It demonstrates:
-// - Responsive layout (mobile/tablet/laptop/desktop)
-// - Left publish sidebar (collapsible on small screens)
-// - Book & Video forms
-// - Search bar, stats, and user button
-// - Cards grid with action menu (Edit/Delete) and View CTA
-// - Accessible labels and keyboard support
-//
-// Tailwind is used for styling. See usage notes in the chat for how to wire Tailwind.
 
 const MOCK_BOOKS = Array.from({ length: 8 }).map((_, i) => ({
   id: `book-${i + 1}`,

@@ -1,9 +1,10 @@
 // src/pages/Auth.tsx
 import { useState } from "react";
 import { useUserLoginStore } from "../hooks/store";
-import { message } from "antd";
+import { message, Spin } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 
 export default function Auth() {
   type FormState = {
@@ -26,6 +27,8 @@ export default function Auth() {
   const isRegistered = useUserLoginStore((state) => state.isRegistered);
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
   const [messageApi, contextHolder] = message.useMessage();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [formState, setFormState] = useState<FormState>({
     firstname: "",
     lastName: "",
@@ -71,6 +74,7 @@ export default function Auth() {
     },
   ];
   function Register() {
+    setLoading(true);
     axios
       .post(`https://ebook-dbm9.onrender.com/members/api/register`, {
         email: formState.email,
@@ -89,10 +93,12 @@ export default function Auth() {
           isRegistered: true,
           isSignedIn: false,
         });
+        setLoading(false);
         setIsSignIn(true);
       })
       .catch((error) => {
         // console.log(error.response.data.message);
+        setLoading(false);
         messageApi.open({
           type: "error",
           content: `${error.response.data.message}`,
@@ -100,6 +106,7 @@ export default function Auth() {
       });
   }
   function SignIn() {
+    setLoading(true);
     axios
       .get(
         `https://ebook-dbm9.onrender.com/members/api/user?email=${formState.email}&passwordHash=${formState.password}`
@@ -116,10 +123,16 @@ export default function Auth() {
           isRegistered: true,
           isSignedIn: true,
         });
-        res.data.role === "USER" && isRegistered === true ? navigate("/ebook") : res.data.role === "ADMIN" ? navigate("/admin") : navigate("/");
+        setLoading(false);
+        res.data.role === "USER" && isRegistered === true
+          ? navigate("/ebook")
+          : res.data.role === "ADMIN"
+          ? navigate("/admin")
+          : navigate("/");
       })
       .catch((error) => {
         // console.log(error.response.data.message);
+        setLoading(false);
         if (error.response.status === 400) {
           messageApi.open({
             type: "warning",
@@ -138,7 +151,9 @@ export default function Auth() {
     setFormState((prev: FormState) => ({ ...prev, [key]: value }));
   }
   function ValidateUserBeforeRegister(isSignIn: boolean) {
-    let isValidForRegisterOrSignIn = isSignIn ? validateFields.slice(2,5).find((field) => !field.check) : validateFields.find((field) => !field.check);
+    let isValidForRegisterOrSignIn = isSignIn
+      ? validateFields.slice(2, 5).find((field) => !field.check)
+      : validateFields.find((field) => !field.check);
     if (isValidForRegisterOrSignIn !== undefined) {
       messageApi.open({
         type: "warning",
@@ -150,10 +165,11 @@ export default function Auth() {
     }
   }
 
-  console.log(formState);
+  // console.log(formState);
   return (
     <>
       {contextHolder}
+      <Spin spinning={loading} size="large"  fullscreen />
       <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
         <div className="w-full max-w-sm rounded-lg border bg-white p-6 shadow-md">
           <h2 className="mb-6 text-center text-2xl font-semibold text-gray-800">
@@ -222,16 +238,30 @@ export default function Auth() {
               <label className="block text-sm font-medium text-gray-600">
                 Password
               </label>
-              <input
-                type="password"
-                placeholder="Enter password"
-                className="mt-1 w-full rounded-md border px-3 py-2 text-sm outline-none focus:border-black focus:ring-1 focus:ring-black"
-                value={formState.password}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  updateFormState("password", e.target.value)
-                }
-                required
-              />
+              <div className="flex">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter password"
+                  className="mt-1 w-full rounded-md border px-3 py-2 text-sm outline-none focus:border-black focus:ring-1 focus:ring-black"
+                  value={formState.password}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    updateFormState("password", e.target.value)
+                  }
+                  required
+                />
+                {formState.password.length > 1 && (
+                  <div
+                    className="-ml-10"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOutlined className="cursor-pointer pt-4" />
+                    ) : (
+                      <EyeInvisibleOutlined className="cursor-pointer pt-4" />
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             {!isSignIn && (
@@ -239,16 +269,30 @@ export default function Auth() {
                 <label className="block text-sm font-medium text-gray-600">
                   Confirm Password
                 </label>
-                <input
-                  type="password"
-                  placeholder="Confirm password"
-                  className="mt-1 w-full rounded-md border px-3 py-2 text-sm outline-none focus:border-black focus:ring-1 focus:ring-black"
-                  value={formState.confirmPassword}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    updateFormState("confirmPassword", e.target.value)
-                  }
-                  required
-                />
+                <div className="flex">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Confirm password"
+                    className="mt-1 w-full rounded-md border px-3 py-2 text-sm outline-none focus:border-black focus:ring-1 focus:ring-black"
+                    value={formState.confirmPassword}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      updateFormState("confirmPassword", e.target.value)
+                    }
+                    required
+                  />
+                  {formState.confirmPassword.length > 1 && (
+                    <div
+                      className="-ml-10"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOutlined className="cursor-pointer pt-4" />
+                      ) : (
+                        <EyeInvisibleOutlined className="cursor-pointer pt-4" />
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
             <button

@@ -22,7 +22,6 @@ export default function Auth() {
   const updateUserStateStore = useUserLoginStore(
     (state) => state.updateUserState
   );
-  const service = import.meta.env.LOCAL_HOST;
   const navigate = useNavigate();
   const isRegistered = useUserLoginStore((state) => state.isRegistered);
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
@@ -73,7 +72,7 @@ export default function Auth() {
   ];
   function Register() {
     axios
-      .post(`${service}/members/api/register`, {
+      .post(`https://ebook-dbm9.onrender.com/members/api/register`, {
         email: formState.email,
         passwordHash: formState.password,
         userName: `${formState.firstname} ${formState.lastName}`,
@@ -103,7 +102,7 @@ export default function Auth() {
   function SignIn() {
     axios
       .get(
-        `${service}/members/api/user?email=${formState.email}&passwordHash=${formState.password}`
+        `https://ebook-dbm9.onrender.com/members/api/user?email=${formState.email}&passwordHash=${formState.password}`
       )
       .then((res) => {
         messageApi.open({

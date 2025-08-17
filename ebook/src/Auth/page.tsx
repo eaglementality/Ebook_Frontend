@@ -22,8 +22,9 @@ export default function Auth() {
   const updateUserStateStore = useUserLoginStore(
     (state) => state.updateUserState
   );
-  const service = process.env.LOCAL_HOST ;;
+  const service = import.meta.env.LOCAL_HOST;
   const navigate = useNavigate();
+  const isRegistered = useUserLoginStore((state) => state.isRegistered);
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
   const [messageApi, contextHolder] = message.useMessage();
   const [formState, setFormState] = useState<FormState>({
@@ -72,7 +73,7 @@ export default function Auth() {
   ];
   function Register() {
     axios
-      .post(`${service}/auth/api/register`, {
+      .post(`${service}/members/api/register`, {
         email: formState.email,
         passwordHash: formState.password,
         userName: `${formState.firstname} ${formState.lastName}`,
@@ -87,7 +88,7 @@ export default function Auth() {
           name: `${formState.firstname} ${formState.lastName}`,
           password: formState.password,
           isRegistered: true,
-          isSignedIn: true,
+          isSignedIn: false,
         });
         setIsSignIn(true);
       })
@@ -102,7 +103,7 @@ export default function Auth() {
   function SignIn() {
     axios
       .get(
-        `${service}/auth/api/user?email=${formState.email}&passwordHash=${formState.password}`
+        `${service}/members/api/user?email=${formState.email}&passwordHash=${formState.password}`
       )
       .then((res) => {
         messageApi.open({
@@ -116,7 +117,7 @@ export default function Auth() {
           isRegistered: true,
           isSignedIn: true,
         });
-        res.data.role !== "ADMIN" ? navigate("/ebook") : navigate("/admin");
+        res.data.role === "USER" && isRegistered === true ? navigate("/ebook") : res.data.role === "ADMIN" ? navigate("/admin") : navigate("/");
       })
       .catch((error) => {
         // console.log(error.response.data.message);

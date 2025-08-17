@@ -5,6 +5,7 @@ import AdminDashboard from "./Admin/page";
 import { useUserLoginStore } from "./hooks/store";
 
 function App() {
+  const isRegistered = useUserLoginStore((state) => state.isRegistered);
   const isSignedIn = useUserLoginStore((state) => state.isSignedIn);
   return (
     <BrowserRouter>
@@ -12,11 +13,11 @@ function App() {
         <Route path="/" element={<Auth />} />
         <Route
           path="/ebook"
-          element={isSignedIn === false ? <Auth /> : <User />}
+          element={isRegistered  === false && isSignedIn === false ? <Auth /> : <User />}
         />
         <Route
           path="/admin"
-          element={isSignedIn === false ? <Auth /> : <AdminDashboard />}
+          element={isRegistered === false && isSignedIn === false ? <Auth /> : <AdminDashboard />}
         />
         <Route
           path="*"

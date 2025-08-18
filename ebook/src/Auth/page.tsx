@@ -272,7 +272,7 @@ export default function Auth() {
                 </label>
                 <div className="flex">
                   <input
-                    type={showPassword ? "text" : "password"}
+                    type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm password"
                     className="mt-1 w-full rounded-md border px-3 py-2 text-sm outline-none focus:border-black focus:ring-1 focus:ring-black"
                     value={formState.confirmPassword}

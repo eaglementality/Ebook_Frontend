@@ -29,6 +29,7 @@ export default function Auth() {
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
   const [formState, setFormState] = useState<FormState>({
     firstname: "",
     lastName: "",
@@ -283,9 +284,9 @@ export default function Auth() {
                   {formState.confirmPassword.length > 1 && (
                     <div
                       className="-ml-10"
-                      onClick={() => setShowPassword(!showPassword)}
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
-                      {showPassword ? (
+                      {showConfirmPassword ? (
                         <EyeOutlined className="cursor-pointer pt-4" />
                       ) : (
                         <EyeInvisibleOutlined className="cursor-pointer pt-4" />

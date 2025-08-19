@@ -2,22 +2,37 @@ import Auth from "./Auth/page";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import User from "./Client/page";
 import AdminDashboard from "./Admin/page";
-import { useUserLoginStore } from "./hooks/store";
+// import { useUserLoginStore } from "./hooks/store";
 
 function App() {
-  const isRegistered = useUserLoginStore((state) => state.isRegistered);
-  const isSignedIn = useUserLoginStore((state) => state.isSignedIn);
+  // const isRegistered = useUserLoginStore((state) => state.isRegistered);
+  // const isSignedIn = useUserLoginStore((state) => state.isSignedIn);
+  const user = JSON.parse(window.sessionStorage.getItem("user") || "{}");
+
+  console.log(user);
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Auth />} />
         <Route
           path="/ebook"
-          element={isRegistered  === false && isSignedIn === false ? <Auth /> : <User />}
+          element={
+            user.isRegistered === false && user.isSignedIn === false ? (
+              <Auth />
+            ) : (
+              <User />
+            )
+          }
         />
         <Route
           path="/admin"
-          element={isRegistered === false && isSignedIn === false ? <Auth /> : <AdminDashboard />}
+          element={
+            user.isRegistered === false && user.isSignedIn === false ? (
+              <Auth />
+            ) : (
+              <AdminDashboard />
+            )
+          }
         />
         <Route
           path="*"

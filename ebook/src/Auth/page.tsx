@@ -1,6 +1,6 @@
 // src/pages/Auth.tsx
-import { useState } from "react";
-import { useUserLoginStore } from "../hooks/store";
+import { useEffect, useState } from "react";
+// import { useUserLoginStore } from "../hooks/store";
 import { message, Spin } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -13,29 +13,36 @@ export default function Auth() {
     password: string;
     confirmPassword: string;
     email: string;
+    isRegistered: boolean;
+    isSignedIn: boolean;
   };
   type fields =
     | "firstname"
     | "lastName"
     | "password"
     | "confirmPassword"
-    | "email";
-  const updateUserStateStore = useUserLoginStore(
-    (state) => state.updateUserState
-  );
+    | "email"
+    | "isRegistered"
+    | "isSignedIn";
+  // const updateUserStateStore = useUserLoginStore(
+  //   (state) => state.updateUserState
+  // );
   const navigate = useNavigate();
-  const isRegistered = useUserLoginStore((state) => state.isRegistered);
+  // const isRegistered = useUserLoginStore((state) => state.isRegistered);
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
   const [formState, setFormState] = useState<FormState>({
     firstname: "",
     lastName: "",
     password: "",
     confirmPassword: "",
     email: "",
+    isRegistered: false,
+    isSignedIn: false,
   });
   const validateFields = [
     {
@@ -74,6 +81,13 @@ export default function Auth() {
       type: "warning",
     },
   ];
+  function setValueToSessionStorage(key: string, value:{isRegistered: boolean, isSignedIn: boolean}) {
+    try {
+      window.sessionStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.log(error);
+    }
+  }
   function Register() {
     setLoading(true);
     axios
@@ -87,13 +101,14 @@ export default function Auth() {
           type: "success",
           content: "Registered successfully!",
         });
-        updateUserStateStore({
-          email: formState.email,
-          name: `${formState.firstname} ${formState.lastName}`,
-          password: formState.password,
-          isRegistered: true,
-          isSignedIn: false,
-        });
+        // updateUserStateStore({
+        //   email: formState.email,
+        //   name: `${formState.firstname} ${formState.lastName}`,
+        //   password: formState.password,
+        //   isRegistered: true,
+        //   isSignedIn: false,
+        // });
+        setValueToSessionStorage('user',{isRegistered: true,isSignedIn: false})
         setLoading(false);
         setIsSignIn(true);
       })
@@ -117,15 +132,16 @@ export default function Auth() {
           type: "success",
           content: "Sign in successful!",
         });
-        updateUserStateStore({
-          email: formState.email,
-          name: `${formState.firstname} ${formState.lastName}`,
-          password: formState.password,
-          isRegistered: true,
-          isSignedIn: true,
-        });
+        // updateUserStateStore({
+        //   email: formState.email,
+        //   name: `${formState.firstname} ${formState.lastName}`,
+        //   password: formState.password,
+        //   isRegistered: true,
+        //   isSignedIn: true,
+        // });
+        setValueToSessionStorage('user',{isRegistered: true,isSignedIn: true})
         setLoading(false);
-        res.data.role === "USER" && isRegistered === true
+        res.data.role === "USER" && formState.isRegistered === true
           ? navigate("/ebook")
           : res.data.role === "ADMIN"
           ? navigate("/admin")
@@ -148,7 +164,7 @@ export default function Auth() {
         }
       });
   }
-  function updateFormState(key: fields, value: string) {
+  function updateFormState(key: fields, value: string | boolean) {
     setFormState((prev: FormState) => ({ ...prev, [key]: value }));
   }
   function ValidateUserBeforeRegister(isSignIn: boolean) {
@@ -166,11 +182,13 @@ export default function Auth() {
     }
   }
 
+
   // console.log(formState);
+
   return (
     <>
       {contextHolder}
-      <Spin spinning={loading} size="large" percent={'auto'} fullscreen />
+      <Spin spinning={loading} size="large" fullscreen />
       <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
         <div className="w-full max-w-sm rounded-lg border bg-white p-6 shadow-md">
           <h2 className="mb-6 text-center text-2xl font-semibold text-gray-800">
@@ -284,7 +302,9 @@ export default function Auth() {
                   {formState.confirmPassword.length > 1 && (
                     <div
                       className="-ml-10"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                     >
                       {showConfirmPassword ? (
                         <EyeOutlined className="cursor-pointer pt-4" />

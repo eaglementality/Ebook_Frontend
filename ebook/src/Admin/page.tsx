@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { ProfileCard } from "./widget/profileCard";
 import { BookCard } from "./widget/bookCard";
 import UserDetailDrawer from "./widget/UserDetailDrawer";
+import { useUserLoginStore } from "../hooks/store";
 
 const MOCK_BOOKS = Array.from({ length: 8 }).map((_, i) => ({
   id: `book-${i + 1}`,
@@ -15,6 +16,7 @@ export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sideDrawerOpen, setSideDrawerOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const numberOfUsers = useUserLoginStore((state) => state.numberOfUsers);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -142,7 +144,7 @@ function OpenOrCloseDrawer(){
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="flex gap-6">
                 <Stat label="Books" value={50} />
-                <Stat label="Users" value={200} />
+                <Stat label="Users" value={numberOfUsers ?? 0} />
               </div>
 
               <div className="flex flex-1 items-center gap-3 sm:ml-auto">

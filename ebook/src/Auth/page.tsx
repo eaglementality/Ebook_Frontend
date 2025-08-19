@@ -140,12 +140,12 @@ export default function Auth() {
         //   isSignedIn: true,
         // });
         setValueToSessionStorage('user',{isRegistered: true,isSignedIn: true})
+        res.data.role === "USER"
+        ? navigate("/ebook")
+        : res.data.role === "ADMIN"
+        ? navigate("/admin")
+        : navigate("/");
         setLoading(false);
-        res.data.role === "USER" && formState.isRegistered === true
-          ? navigate("/ebook")
-          : res.data.role === "ADMIN"
-          ? navigate("/admin")
-          : navigate("/");
       })
       .catch((error) => {
         // console.log(error.response.data.message);

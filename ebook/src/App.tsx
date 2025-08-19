@@ -13,9 +13,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Auth />} />
+        <Route path="/nursequill.vercel.app" element={<Auth />} />
         <Route
-          path="/ebook"
+          path="nursequill.vercel.app/ebook"
           element={
             user.isRegistered === false && user.isSignedIn === false ? (
               <Auth />
@@ -25,7 +25,7 @@ function App() {
           }
         />
         <Route
-          path="/admin"
+          path="/nursequill.vercel.app/admin"
           element={
             user.isRegistered === false && user.isSignedIn === false ? (
               <Auth />

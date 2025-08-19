@@ -1,5 +1,5 @@
 // src/pages/Auth.tsx
-import { useEffect, useState } from "react";
+import {useState } from "react";
 // import { useUserLoginStore } from "../hooks/store";
 import { message, Spin } from "antd";
 import axios from "axios";

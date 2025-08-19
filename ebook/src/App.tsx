@@ -10,13 +10,13 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Auth />} />
+        <Route path="https://nursequill.vercel.app/" element={<Auth />} />
         <Route
-          path="/ebook"
+          path="https://nursequill.vercel.app/ebook"
           element={isRegistered  === false && isSignedIn === false ? <Auth /> : <User />}
         />
         <Route
-          path="/admin"
+          path="https://nursequill.vercel.app/admin"
           element={isRegistered === false && isSignedIn === false ? <Auth /> : <AdminDashboard />}
         />
         <Route

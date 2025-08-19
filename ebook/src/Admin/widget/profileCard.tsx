@@ -1,5 +1,13 @@
 'use server'
+
+import { useNavigate } from "react-router-dom";
+
 export function ProfileCard() {
+  const navigate = useNavigate();
+  function handleLogout() {
+    window.sessionStorage.setItem("user", JSON.stringify({ isRegistered: false, isSignedIn: false }));
+    navigate("/");
+  }
   return (
     <div className="mb-4 flex items-center gap-3 rounded-2xl bg-white p-4 shadow-sm">
       <img
@@ -12,6 +20,7 @@ export function ProfileCard() {
         <p className="truncate text-sm font-semibold">Welcome</p>
         <p className="truncate text-sm text-neutral-500">Erica Yeboah</p>
       </div>
+      <h1 onClick={handleLogout} className="flex ml-20 cursor-pointer font-semibold bg-rose-100 p-2 rounded-xl">Log out</h1>
     </div>
   );
 }

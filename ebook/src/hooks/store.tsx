@@ -7,6 +7,7 @@ type userLoginStore = {
     password:string,
     isRegistered:boolean
     isSignedIn:boolean
+    numberOfUsers?:number
 }
 type userLoginActions={
     updateUserState: (user: Partial<userLoginStore>) => void;
@@ -19,6 +20,7 @@ const userLogState: userLoginStore = {
     password: '',
     isRegistered: false,
     isSignedIn: false,
+    numberOfUsers: 0
 }
 
 export const useUserLoginStore = create<userLoginStore & userLoginActions>()((set) => ({

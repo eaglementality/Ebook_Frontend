@@ -170,7 +170,7 @@ export default function Auth() {
   return (
     <>
       {contextHolder}
-      <Spin spinning={loading} size="large"  fullscreen />
+      <Spin spinning={loading} size="large" percent={'auto'} fullscreen />
       <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
         <div className="w-full max-w-sm rounded-lg border bg-white p-6 shadow-md">
           <h2 className="mb-6 text-center text-2xl font-semibold text-gray-800">

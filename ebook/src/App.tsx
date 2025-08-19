@@ -10,30 +10,16 @@ function App() {
   const user = JSON.parse(window.sessionStorage.getItem("user") || "{}");
 
   console.log(user);
+
+  if (user.isRegistered === false && user.isSignedIn === false) {
+    return <Auth />;
+  }
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/nursequill.vercel.app" element={<Auth />} />
-        <Route
-          path="nursequill.vercel.app/ebook"
-          element={
-            user.isRegistered === false && user.isSignedIn === false ? (
-              <Auth />
-            ) : (
-              <User />
-            )
-          }
-        />
-        <Route
-          path="/nursequill.vercel.app/admin"
-          element={
-            user.isRegistered === false && user.isSignedIn === false ? (
-              <Auth />
-            ) : (
-              <AdminDashboard />
-            )
-          }
-        />
+        <Route path="/" element={<Auth />} />
+        <Route path="/ebook" element={<User />} />
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route
           path="*"
           element={

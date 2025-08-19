@@ -13,6 +13,7 @@ const MOCK_BOOKS = Array.from({ length: 8 }).map((_, i) => ({
 
 export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sideDrawerOpen, setSideDrawerOpen] = useState(false);
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
@@ -24,16 +25,16 @@ export default function AdminDashboard() {
     );
   }, [query]);
 function CloseDrawer () {
-  setSidebarOpen(false);
+  setSideDrawerOpen(false);
 }
-function OpenOrClose(){
-  setSidebarOpen((s) => !s);
+function OpenOrCloseDrawer(){
+  setSideDrawerOpen((s) => !s);
 }
   return (
     <>
       {<UserDetailDrawer
         onClose={CloseDrawer}
-        open={sidebarOpen}
+        open={sideDrawerOpen}
       />
       }
       <div className="min-h-screen bg-neutral-50 text-neutral-800">
@@ -157,7 +158,7 @@ function OpenOrClose(){
                     🔍
                   </span>
                 </div>
-                <button onClick={OpenOrClose} className="whitespace-nowrap rounded-xl border border-neutral-300 bg-white px-4 py-2 text-sm shadow-sm transition hover:bg-neutral-50">
+                <button onClick={OpenOrCloseDrawer} className="whitespace-nowrap rounded-xl border border-neutral-300 bg-white px-4 py-2 text-sm shadow-sm transition hover:bg-neutral-50">
                   View Users
                 </button>
               </div>

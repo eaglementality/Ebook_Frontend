@@ -1,7 +1,8 @@
-import { Drawer, message, Modal } from "antd";
+import { Drawer, message, Modal} from "antd";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import {useEffect, useState } from "react";
 import { useUserLoginStore } from "../../hooks/store";
+import UserDetailsForm from "../userDetailsForm";
 
 export default function UserDetailDrawer({
   onClose,
@@ -12,6 +13,14 @@ export default function UserDetailDrawer({
 }) {
   const [users, setUsers] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
+  const [spin, setSpin] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState({
+    open: false,
+    title: "Delete User!",
+    message: "Are you sure you want to delete this user?",
+    onOk: () => {},
+    onCancel: () => {},
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<{
     userId: string;
@@ -29,11 +38,9 @@ export default function UserDetailDrawer({
   const updateUserStateStore = useUserLoginStore(
     (state) => state.updateUserState
   );
-  function handleDelete(id:string){
+  function handleDelete(id: string) {
     axios
-      .delete(
-        `https://ebook-dbm9.onrender.com/members/api/delete/${id}`
-      )
+      .delete(`https://ebook-dbm9.onrender.com/members/api/delete/${id}`)
       .then(() => {
         messageApi.open({
           type: "success",
@@ -49,6 +56,7 @@ export default function UserDetailDrawer({
       });
   }
   function handleOk() {
+    setSpin(true)
     axios
       .patch(
         `https://ebook-dbm9.onrender.com/members/api/register/${selectedUser.userId}`,
@@ -59,10 +67,12 @@ export default function UserDetailDrawer({
           type: "success",
           content: "User updated successfully",
         });
+        setSpin(false);
         GetUsers();
         setIsModalOpen(false);
       })
       .catch(() => {
+        setSpin(false);
         messageApi.open({
           type: "error",
           content: "Failed to update user",
@@ -89,10 +99,20 @@ export default function UserDetailDrawer({
   useEffect(() => {
     GetUsers();
   }, []);
-
+ 
   return (
     <>
       {contextHolder}
+      
+      <Modal
+        title={openDeleteModal.title}
+        closable={{ "aria-label": "Custom Close Button" }}
+        open={openDeleteModal.open}
+        onOk={openDeleteModal.onOk}
+        onCancel={openDeleteModal.onCancel}
+      >
+        <p>{openDeleteModal.message}</p>
+      </Modal>
       <Modal
         title="Update user"
         closable={{ "aria-label": "Custom Close Button" }}
@@ -101,32 +121,7 @@ export default function UserDetailDrawer({
         onCancel={handleCancel}
         centered
       >
-        <div className="flex flex-col gap-4">
-          <label className="text-sm font-semibold">User Name</label>
-          <input
-            type="text"
-            value={selectedUser?.userName || ""}
-            onChange={(e) =>
-              setSelectedUser((prev) => ({
-                ...prev,
-                userName: e.target.value,
-              }))
-            }
-            className="border border-gray-300 rounded p-2"
-          />
-          <label className="text-sm font-semibold">Email</label>
-          <input
-            type="email"
-            value={selectedUser?.email || ""}
-            onChange={(e) =>
-              setSelectedUser((prev) => ({
-                ...prev,
-                email: e.target.value,
-              }))
-            }
-            className="border border-gray-300 rounded p-2"
-          />
-        </div>
+        <UserDetailsForm spin={spin} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
       </Modal>
       <Drawer
         title="User Details"
@@ -152,7 +147,19 @@ export default function UserDetailDrawer({
               date={user.createdAt}
               setIsModalOpen={setIsModalOpen}
               setSelectedUser={setSelectedUser}
-              handleDelete={() => handleDelete(user.userId)}
+              handleDelete={() => {
+                setOpenDeleteModal((prev) => ({
+                  ...prev,
+                  open: true,
+                  title: "Delete User",
+                  message: `Are you sure you want to delete user ${user.userName}?`,
+                  onOk: () => {
+                    handleDelete(user.userId);
+                    setOpenDeleteModal({ ...openDeleteModal, open: false });
+                  },
+                  onCancel: () => setOpenDeleteModal({ ...openDeleteModal, open: false }),
+                }));
+              }}
             />
           )
         )}
@@ -169,7 +176,7 @@ function UserCard({
   date,
   setIsModalOpen,
   setSelectedUser,
-    handleDelete,
+  handleDelete,
 }: {
   id: string;
   name: string;
@@ -219,9 +226,9 @@ function UserCard({
           viewBox="0 0 16 18"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-            onClick={() => {
-                handleDelete()
-            }}
+          onClick={() => {
+            handleDelete();
+          }}
         >
           <path
             d="M3 18C2.45 18 1.97917 17.8042 1.5875 17.4125C1.19583 17.0208 1 16.55 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8042 17.0208 14.4125 17.4125C14.0208 17.8042 13.55 18 13 18H3ZM13 3H3V16H13V3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z"

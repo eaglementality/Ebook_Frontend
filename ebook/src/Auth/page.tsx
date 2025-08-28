@@ -1,6 +1,6 @@
 // src/pages/Auth.tsx
 import {useState } from "react";
-// import { useUserLoginStore } from "../hooks/store";
+import { useUserLoginStore } from "../hooks/store";
 import { message, Spin } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -24,11 +24,10 @@ export default function Auth() {
     | "email"
     | "isRegistered"
     | "isSignedIn";
-  // const updateUserStateStore = useUserLoginStore(
-  //   (state) => state.updateUserState
-  // );
+  const updateUserStateStore = useUserLoginStore(
+    (state) => state.updateUserState
+  );
   const navigate = useNavigate();
-  // const isRegistered = useUserLoginStore((state) => state.isRegistered);
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState<boolean>(false);
@@ -132,13 +131,13 @@ export default function Auth() {
           type: "success",
           content: "Sign in successful!",
         });
-        // updateUserStateStore({
-        //   email: formState.email,
-        //   name: `${formState.firstname} ${formState.lastName}`,
-        //   password: formState.password,
-        //   isRegistered: true,
-        //   isSignedIn: true,
-        // });
+        updateUserStateStore({
+          email: formState.email,
+          name: `${formState.firstname} ${formState.lastName}`,
+          password: formState.password,
+          isRegistered: true,
+          isSignedIn: true,
+        });
         setValueToSessionStorage('user',{isRegistered: true,isSignedIn: true})
         res.data.role === "USER"
         ? navigate("/ebook")

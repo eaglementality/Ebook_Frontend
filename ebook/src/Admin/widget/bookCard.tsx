@@ -1,4 +1,6 @@
+import { Modal } from "antd";
 import { useState } from "react";
+import PDFViewer from "./PdfViewer";
 
 export function BookCard({
   book,
@@ -6,8 +8,23 @@ export function BookCard({
   book: { id: string; title: string; author: string; cover: string };
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
+    <>
+    {
+      <Modal
+      open={modalOpen}
+      onCancel={() => setModalOpen(false)}
+      footer={null}
+      centered
+      width="100%"
+      // bodyStyle={{ padding: 0, height: "100vh" }}
+      style={{ top: 0, maxWidth: "100vw" , maxHeight:"100vh"}}
+    >
+        <PDFViewer />
+      </Modal>
+    }
     <div className="group relative rounded-2xl border border-neutral-200 bg-white p-3 shadow-sm transition hover:shadow-md">
       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-neutral-100">
         <img
@@ -43,9 +60,9 @@ export function BookCard({
         <p className="truncate text-xs text-neutral-500">{book.author}</p>
       </div>
 
-      <button className="mt-3 w-full rounded-xl bg-neutral-200 px-3 py-1.5 text-sm font-medium text-neutral-700 transition hover:bg-neutral-300">
+      <button onClick={() => setModalOpen(true)} className="mt-3 w-full rounded-xl bg-neutral-200 px-3 py-1.5 text-sm font-medium text-neutral-700 transition hover:bg-neutral-300">
         View
       </button>
-    </div>
+    </div></>
   );
 }

@@ -1,5 +1,5 @@
 // src/pages/Auth.tsx
-import {useState } from "react";
+import { useState } from "react";
 import { useUserLoginStore } from "../hooks/store";
 import { message, Spin } from "antd";
 import axios from "axios";
@@ -80,7 +80,10 @@ export default function Auth() {
       type: "warning",
     },
   ];
-  function setValueToSessionStorage(key: string, value:{isRegistered: boolean, isSignedIn: boolean}) {
+  function setValueToSessionStorage(
+    key: string,
+    value: { isRegistered: boolean; isSignedIn: boolean }
+  ) {
     try {
       window.sessionStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
@@ -90,7 +93,7 @@ export default function Auth() {
   function Register() {
     setLoading(true);
     axios
-      .post(`https://ebook-dbm9.onrender.com/members/api/register`, {
+      .post(`https://ebook-dbm9.onrender.com/api/members/register`, {
         email: formState.email,
         passwordHash: formState.password,
         userName: `${formState.firstname} ${formState.lastName}`,
@@ -107,7 +110,10 @@ export default function Auth() {
         //   isRegistered: true,
         //   isSignedIn: false,
         // });
-        setValueToSessionStorage('user',{isRegistered: true,isSignedIn: false})
+        setValueToSessionStorage("user", {
+          isRegistered: true,
+          isSignedIn: false,
+        });
         setLoading(false);
         setIsSignIn(true);
       })
@@ -124,7 +130,7 @@ export default function Auth() {
     setLoading(true);
     axios
       .get(
-        `https://ebook-dbm9.onrender.com/members/api/user?email=${formState.email}&passwordHash=${formState.password}`
+        `https://ebook-dbm9.onrender.com/api/auth/user?email=${formState.email}&passwordHash=${formState.password}`
       )
       .then((res) => {
         messageApi.open({
@@ -138,12 +144,15 @@ export default function Auth() {
           isRegistered: true,
           isSignedIn: true,
         });
-        setValueToSessionStorage('user',{isRegistered: true,isSignedIn: true})
+        setValueToSessionStorage("user", {
+          isRegistered: true,
+          isSignedIn: true,
+        });
         res.data.role === "USER"
-        ? navigate("/ebook")
-        : res.data.role === "ADMIN"
-        ? navigate("/admin")
-        : navigate("/");
+          ? navigate("/ebook")
+          : res.data.role === "ADMIN"
+          ? navigate("/admin")
+          : navigate("/");
         setLoading(false);
       })
       .catch((error) => {
@@ -180,7 +189,6 @@ export default function Auth() {
       return isSignIn ? SignIn() : Register();
     }
   }
-
 
   // console.log(formState);
 

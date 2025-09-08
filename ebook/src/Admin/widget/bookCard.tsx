@@ -12,20 +12,16 @@ export function BookCard({
   const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
-    const handleOrientationChange = (event: MediaQueryListEvent) => {
-      if (event.matches) {
-        messageApi.open({
-          type: "info",
-          content: "change to landscape",
-        });
-      }
-    };
-    window.matchMedia("(orientation: landscape)").addEventListener("change", handleOrientationChange);
-
-    return () => {
-      window.matchMedia("(orientation: landscape)").removeEventListener("change", handleOrientationChange);
-    };
+    if (modalOpen && window.matchMedia("(orientation: portrait)").matches) {
+      messageApi.open({
+        type: "info",
+        content: "change to landscape",
+      });
+      setModalOpen(false);
+    }
+    return () => {};
   }, [modalOpen]);
+
   return (
     <>
       {contextHolder}

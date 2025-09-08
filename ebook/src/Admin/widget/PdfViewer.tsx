@@ -11,7 +11,6 @@ function PDFViewer() {
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [width, setWidth] = useState<number>(600);
-
   useEffect(() => {
     function handleResize() {
       if (window.innerWidth < 640) {
@@ -26,6 +25,7 @@ function PDFViewer() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);

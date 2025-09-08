@@ -59,7 +59,7 @@ export default function UserDetailDrawer({
     setSpin(true)
     axios
       .patch(
-        `https://ebook-dbm9.onrender.com/members/api/register/${selectedUser.userId}`,
+        `https://ebook-dbm9.onrender.com/api/auth/register/${selectedUser.userId}`,
         selectedUser
       )
       .then(() => {
@@ -84,7 +84,7 @@ export default function UserDetailDrawer({
   }
   function GetUsers() {
     axios
-      .get(`https://ebook-dbm9.onrender.com/members`)
+      .get(`https://ebook-dbm9.onrender.com/api/auth/`)
       .then((response) => {
         setUsers(response.data);
         updateUserStateStore({ numberOfUsers: response.data.length });

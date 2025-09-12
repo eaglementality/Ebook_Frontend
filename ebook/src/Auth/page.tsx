@@ -132,7 +132,7 @@ export default function Auth() {
         `auth/user?email=${formState.email}&passwordHash=${formState.password}`
       )
       .then((res) => {
-        const expiryTime = Date.now() + 30 * 60 * 1000;
+        const expiryTime = Date.now() + 10 * 60 * 1000;
         messageApi.open({
           type: "success",
           content: "Sign in successful!",

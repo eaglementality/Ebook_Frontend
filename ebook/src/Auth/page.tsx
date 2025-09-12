@@ -81,7 +81,7 @@ export default function Auth() {
   ];
   function setValueToSessionStorage(
     key: string,
-    value: { token: string; role: "USER" | "ADMIN" }
+    value: { token: string; role: "USER" | "ADMIN"; expiry: number },
   ) {
     try {
       window.localStorage.setItem(key, JSON.stringify(value));
@@ -147,6 +147,7 @@ export default function Auth() {
         setValueToSessionStorage("user", {
           token: res.data.access_token,
           role: res.data.role,
+          expiry: expiryTime
         });
         setLoading(false);
         if (res.data.role === "ADMIN") {

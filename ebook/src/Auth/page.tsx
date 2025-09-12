@@ -1,10 +1,9 @@
-// src/pages/Auth.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUserLoginStore } from "../hooks/store";
 import { message, Spin } from "antd";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import api from "../util/ApiConfig";
 
 export default function Auth() {
   type FormState = {
@@ -82,18 +81,18 @@ export default function Auth() {
   ];
   function setValueToSessionStorage(
     key: string,
-    value: { isRegistered: boolean; isSignedIn: boolean }
+    value: { token: string; role: "USER" | "ADMIN"; expiry: number },
   ) {
     try {
-      window.sessionStorage.setItem(key, JSON.stringify(value));
+      window.localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
       console.log(error);
     }
   }
   function Register() {
     setLoading(true);
-    axios
-      .post(`https://ebook-dbm9.onrender.com/api/members/register`, {
+    api
+      .post(`auth/register`, {
         email: formState.email,
         passwordHash: formState.password,
         userName: `${formState.firstname} ${formState.lastName}`,
@@ -110,10 +109,10 @@ export default function Auth() {
         //   isRegistered: true,
         //   isSignedIn: false,
         // });
-        setValueToSessionStorage("user", {
-          isRegistered: true,
-          isSignedIn: false,
-        });
+        // setValueToSessionStorage("user", {
+        //   token: res.data.token,
+        //   role: res.data.role,
+        // });
         setLoading(false);
         setIsSignIn(true);
       })
@@ -128,11 +127,12 @@ export default function Auth() {
   }
   function SignIn() {
     setLoading(true);
-    axios
+    api
       .get(
-        `https://ebook-dbm9.onrender.com/api/auth/user?email=${formState.email}&passwordHash=${formState.password}`
+        `auth/user?email=${formState.email}&passwordHash=${formState.password}`
       )
       .then((res) => {
+        const expiryTime = Date.now() + 30 * 60 * 1000;
         messageApi.open({
           type: "success",
           content: "Sign in successful!",
@@ -145,15 +145,16 @@ export default function Auth() {
           isSignedIn: true,
         });
         setValueToSessionStorage("user", {
-          isRegistered: true,
-          isSignedIn: true,
+          token: res.data.access_token,
+          role: res.data.role,
+          expiry: expiryTime
         });
-        res.data.role === "USER"
-          ? navigate("/ebook")
-          : res.data.role === "ADMIN"
-          ? navigate("/admin")
-          : navigate("/");
         setLoading(false);
+        if (res.data.role === "ADMIN") {
+          navigate("/admin", { replace: true });
+        } else {
+          navigate("/ebook", { replace: true });
+        }
       })
       .catch((error) => {
         // console.log(error.response.data.message);
@@ -189,9 +190,15 @@ export default function Auth() {
       return isSignIn ? SignIn() : Register();
     }
   }
-
-  // console.log(formState);
-
+ useEffect(() => {
+    const userObject = localStorage.getItem("user");
+    const role = JSON.parse(userObject as string)?.role;
+    if (role === "ADMIN") {
+      navigate("/admin", { replace: true });
+    } else if (role === "USER") {
+      navigate("/ebook", { replace: true });
+    }
+  }, [navigate]);
   return (
     <>
       {contextHolder}

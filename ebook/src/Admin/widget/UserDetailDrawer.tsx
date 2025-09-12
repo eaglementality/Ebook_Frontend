@@ -3,6 +3,7 @@ import axios from "axios";
 import {useEffect, useState } from "react";
 import { useUserLoginStore } from "../../hooks/store";
 import UserDetailsForm from "../userDetailsForm";
+import api from "../../util/ApiConfig";
 
 export default function UserDetailDrawer({
   onClose,
@@ -83,8 +84,8 @@ export default function UserDetailDrawer({
     setIsModalOpen(false);
   }
   function GetUsers() {
-    axios
-      .get(`https://ebook-dbm9.onrender.com/api/auth/`)
+    api
+      .get(`auth/`)
       .then((response) => {
         setUsers(response.data);
         updateUserStateStore({ numberOfUsers: response.data.length });

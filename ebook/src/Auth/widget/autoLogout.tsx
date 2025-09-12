@@ -9,7 +9,7 @@ function AutoLogout({ children }: { children: React.ReactNode }) {
     clearTimeout(timer);
     timer = setTimeout(() => {
       logout()
-    }, 30 * 60 * 1000); // 30 mins inactivity
+    }, 10 * 60 * 1000); // 10 mins inactivity
   };
 
   useEffect(() => {

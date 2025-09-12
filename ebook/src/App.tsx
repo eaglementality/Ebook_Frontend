@@ -2,6 +2,8 @@ import Auth from "./Auth/page";
 import { Route, Routes,  } from "react-router-dom";
 import User from "./Client/page";
 import AdminDashboard from "./Admin/page";
+import ProtectedRoute from "./Auth/widget/protectedRoute";
+import AutoLogout from "./Auth/widget/autoLogout";
 // import { useEffect } from "react";
 // import { useUserLoginStore } from "./hooks/store";
 
@@ -25,8 +27,8 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Auth />} />
-      <Route path="/ebook" element={<User />} />
-      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/ebook" element={<ProtectedRoute allowedRole="USER"><AutoLogout><User /></AutoLogout></ProtectedRoute>} />
+      <Route path="/admin" element={<ProtectedRoute allowedRole="ADMIN"><AutoLogout><AdminDashboard /></AutoLogout></ProtectedRoute>} />
       <Route
         path="*"
         element={

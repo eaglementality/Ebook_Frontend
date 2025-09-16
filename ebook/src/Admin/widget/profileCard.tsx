@@ -1,9 +1,13 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, type NavigateFunction } from "react-router-dom";
 import { useUserLoginStore } from "../../hooks/store";
 
 export function ProfileCard() {
   const name = useUserLoginStore((state) => state.name);
-
+  const navigate = useNavigate();
+  function Logout() {
+    localStorage.removeItem("user");
+    navigate("/", { replace: true });
+  }
   return (
     <div className="mb-4 flex items-center gap-3 rounded-2xl bg-white p-4 shadow-sm">
       <img
@@ -17,7 +21,7 @@ export function ProfileCard() {
         <p className="truncate text-sm text-neutral-500">{name}</p>
       </div>
       <h1
-        onClick={logout}
+        onClick={Logout}
         className="flex ml-20 cursor-pointer font-semibold bg-rose-100 p-2 rounded-xl"
       >
         Log out
@@ -25,8 +29,7 @@ export function ProfileCard() {
     </div>
   );
 }
-export function logout() {
-  const navigate = useNavigate();
+export function logout(navigate: NavigateFunction) {
   localStorage.removeItem("user");
   navigate("/", { replace: true });
 }

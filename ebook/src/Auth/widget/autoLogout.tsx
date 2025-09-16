@@ -1,15 +1,17 @@
 
 import { logout } from "../../Admin/widget/profileCard";
 import { useEffect } from "react";
+import {useNavigate, type NavigateFunction} from 'react-router-dom';
 
 function AutoLogout({ children }: { children: React.ReactNode }) {
+    const navigate:NavigateFunction = useNavigate()
   let timer: NodeJS.Timeout;
 
   const resetTimer = () => {
     clearTimeout(timer);
     timer = setTimeout(() => {
-      logout()
-    }, 10 * 60 * 1000); // 10 mins inactivity
+      return logout(navigate);
+    }, 1 * 60 * 1000); // 10 mins inactivity
   };
 
   useEffect(() => {

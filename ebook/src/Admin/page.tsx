@@ -3,14 +3,8 @@ import { ProfileCard } from "./widget/profileCard";
 import { BookCard } from "./widget/bookCard";
 import UserDetailDrawer from "./widget/UserDetailDrawer";
 import { useUserLoginStore } from "../hooks/store";
-
-const MOCK_BOOKS = Array.from({ length: 8 }).map((_, i) => ({
-  id: `book-${i + 1}`,
-  title: "Tip Of Simple Lifestyle",
-  author: "Erica Yeboah",
-  cover:
-    "https://images.unsplash.com/photo-1526318472351-c75fcf070305?q=80&w=600&auto=format&fit=crop",
-}));
+import Front_Cover from "../assets/Front_Cover.png";
+import Back_Cover from "../assets/Back_Cover.png";
 
 export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -19,19 +13,32 @@ export default function AdminDashboard() {
   const numberOfUsers = useUserLoginStore((state) => state.numberOfUsers);
   
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return MOCK_BOOKS;
-    return MOCK_BOOKS.filter(
-      (b) =>
-        b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)
-    );
-  }, [query]);
-function CloseDrawer () {
-  setSideDrawerOpen(false);
-}
-function OpenOrCloseDrawer(){
-  setSideDrawerOpen((s) => !s);
+  const books = useMemo(
+    () => [
+      {
+        id: "1",
+        title: "Top 30 Interview Questions For Nurses and Midwifery students",
+        author: "Erica Yeboah",
+        category: "Education",
+        language: "English",
+        price: 50.00,
+        publisher: "Erica Yeboah",
+        pages: 100,
+        releaseDate: "2023-01-01",
+        description: "Description for Book Title 1",
+        frontCover: Front_Cover,
+        backCover: Back_Cover,
+        fileUrl: "https://example.com/book1.pdf",
+      },
+    ],
+    []
+  );
+
+  function CloseDrawer () {
+    setSideDrawerOpen(false);
+  }
+  function OpenOrCloseDrawer(){
+    setSideDrawerOpen((s) => !s);
 }
   return (
     <>
@@ -169,11 +176,11 @@ function OpenOrCloseDrawer(){
 
             {/* Cards Grid */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {filtered.map((b) => (
+              {books.map((b) => (
                 <BookCard key={b.id} book={b} />
               ))}
               {/* Empty state */}
-              {filtered.length === 0 && (
+              {books.length === 0 && (
                 <div className="col-span-full rounded-2xl border border-dashed border-neutral-300 bg-white p-10 text-center text-neutral-500">
                   No results. Try another search.
                 </div>

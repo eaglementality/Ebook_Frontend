@@ -5,7 +5,7 @@ import PDFViewer from "./PdfViewer";
 export function BookCard({
   book,
 }: {
-  book: { id: string; title: string; author: string; cover: string };
+  book: { id: string; title: string; author: string; frontCover: string };
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -39,10 +39,10 @@ export function BookCard({
           <PDFViewer />
         </Modal>
       }
-      <div className="group relative rounded-2xl border border-neutral-200 bg-white p-3 shadow-sm transition hover:shadow-md">
+      <div className="group relative rounded-2xl border border-neutral-200 bg-white p-2 shadow-sm transition hover:shadow-md">
         <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-neutral-100">
           <img
-            src={book.cover}
+            src={book.frontCover}
             alt={book.title}
             className="h-full w-full object-cover"
           />

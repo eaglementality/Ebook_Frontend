@@ -11,7 +11,6 @@ export default function AdminDashboard() {
   const [sideDrawerOpen, setSideDrawerOpen] = useState(false);
   const [query, setQuery] = useState("");
   const numberOfUsers = useUserLoginStore((state) => state.numberOfUsers);
-  
 
   const books = useMemo(
     () => [
@@ -21,11 +20,13 @@ export default function AdminDashboard() {
         author: "Erica Yeboah",
         category: "Education",
         language: "English",
-        price: 50.00,
+        price: "GH₵ 50.00",
+        format: "Ebook & Audiobook",
         publisher: "Erica Yeboah",
         pages: 100,
         releaseDate: "2023-01-01",
-        description: "Description for Book Title 1",
+        description:
+          "This book is designed to help nursing and midwifery student prepare for interviews by providing a comprehensive list of potential questions an effective strategies for answering them. Whether you're a student looking to improve your interview skills or an educator seeking a resource for your students, this guide offers valuable insights to help you succeed in your interviews.",
         frontCover: Front_Cover,
         backCover: Back_Cover,
         fileUrl: "https://example.com/book1.pdf",
@@ -34,19 +35,15 @@ export default function AdminDashboard() {
     []
   );
 
-  function CloseDrawer () {
+  function CloseDrawer() {
     setSideDrawerOpen(false);
   }
-  function OpenOrCloseDrawer(){
+  function OpenOrCloseDrawer() {
     setSideDrawerOpen((s) => !s);
-}
+  }
   return (
     <>
-      {<UserDetailDrawer
-        onClose={CloseDrawer}
-        open={sideDrawerOpen}
-      />
-      }
+      {<UserDetailDrawer onClose={CloseDrawer} open={sideDrawerOpen} />}
       <div className="min-h-screen bg-neutral-50 text-neutral-800">
         {/* Top bar (mobile) */}
         <div className="sticky top-0 z-40 flex items-center gap-3 bg-neutral-100 px-4 py-3 shadow-sm sm:hidden">
@@ -168,7 +165,10 @@ export default function AdminDashboard() {
                     🔍
                   </span>
                 </div>
-                <button onClick={OpenOrCloseDrawer} className="whitespace-nowrap rounded-xl border border-neutral-300 bg-white px-4 py-2 text-sm shadow-sm transition hover:bg-neutral-50">
+                <button
+                  onClick={OpenOrCloseDrawer}
+                  className="whitespace-nowrap rounded-xl border border-neutral-300 bg-white px-4 py-2 text-sm shadow-sm transition hover:bg-neutral-50"
+                >
                   View Users
                 </button>
               </div>

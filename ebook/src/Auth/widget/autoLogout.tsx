@@ -11,7 +11,7 @@ function AutoLogout({ children }: { children: React.ReactNode }) {
     clearTimeout(timer);
     timer = setTimeout(() => {
       return logout(navigate);
-    }, 1 * 60 * 1000); // 10 mins inactivity
+    }, 5 * 60 * 1000); // 5 mins inactivity
   };
 
   useEffect(() => {

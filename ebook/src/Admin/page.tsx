@@ -23,7 +23,7 @@ export default function AdminDashboard() {
         price: "GH₵ 50.00",
         format: "Ebook & Audiobook",
         publisher: "Erica Yeboah",
-        pages: 100,
+        pages: 32,
         releaseDate: "2023-01-01",
         description:
           "This book is designed to help nursing and midwifery student prepare for interviews by providing a comprehensive list of potential questions an effective strategies for answering them. Whether you're a student looking to improve your interview skills or an educator seeking a resource for your students, this guide offers valuable insights to help you succeed in your interviews.",
